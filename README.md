@@ -70,6 +70,10 @@ that keep it light:
   finds the supervisor on its own; in a repo without one, it works as usual.
 - **One run per orchestrator.** Its workers and reviews run inside that run, and a handoff carries
   the whole run.
+- **Done means tested.** With a supervisor, each step of the accepted plan is an Orca task that
+  counts only once the orchestrator accepts its result, and `cierre` says `terminado` only after a
+  fresh worker's final test passes on the integrated commit. The summary shows accepted and
+  blocked steps, and marks a closure "sin verificar" (unverified) when the run lacks that test.
 - **No private notes.** The supervisor rebuilds everything from Orca and `intent/`.
 - **Clean exit.** When it finishes, an orchestrator stops its workers, offers to remove the
   worktrees it created and merged, and closes its own tab. The summary lists leftover tabs and
