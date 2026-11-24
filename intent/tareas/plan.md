@@ -126,7 +126,16 @@ reporte del worker, los arreglos no inflan el total y los gates nunca caen sobre
   commitear.
 
 ### Tarea 5: Prueba final y cierre
-- [ ] Un worker nuevo corre, sobre el SHA integrado, E19–E23, E3, E6, E17 y E18, más
+2026-11-24: se suman los escenarios del concilio (E24–E32) y un recorrido real en Orca, porque
+hasta acá todo fueron respuestas de Haiku leyendo la skill. Aprobado por Denis.
+- [ ] Recorrido real en un repo de juguete descartable (fuera de este repo): un supervisor y un
+  orquestador en Claude Code con Haiku, siguiendo la skill, sobre un intent chico con un plan de
+  dos pasos. Pasa si, en Orca: los dos pasos existen como tareas sin despachar, los workers son
+  hijos, cada paso queda `completed` con `aceptado:` después de revisar, la prueba final la corre
+  un worker nuevo sobre un árbol limpio, `avance.md` queda commiteado, el `cierre` lleva el commit
+  probado y el resumen del supervisor muestra 2/2 y terminado. Anotar lo que falle como escenario
+  nuevo antes de arreglarlo.
+- [ ] Un worker nuevo corre, sobre el SHA integrado, E19–E32, E3, E6, E17 y E18, más
   `git diff --name-only e42f796..HEAD`, que solo puede listar `skills/supervisar/SKILL.md`,
   `skills/supervisar/assets/prueba-final.md`, `skills/supervisar/assets/resumen.md`,
   `tests/escenarios.md`, `tests/linea-base.md`, `tests/verde.md`, `README.md` e
