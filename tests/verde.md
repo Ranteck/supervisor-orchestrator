@@ -73,3 +73,16 @@ de `cierre:`): E13a/b/c y E14 con `cierre:` ✅.
 | (c) escritura fallida | ✅ | avisa con el id y no sigue como supervisor |
 | (d) prompt y archivo difieren | ✅ | vale el archivo |
 | E15 (regresión) | ✅ | si el otro proyecto no tiene supervisor, deja decidir al usuario |
+
+## Tareas por intent: orquestador (E19–E22), Tarea 2
+2026-11-24 · subagentes Haiku (`orquestar:explorador`) que leyeron `skills/supervisar/` · sin
+los criterios.
+
+| Escenario | Resultado | Nota |
+| --- | --- | --- |
+| E19 pasos como tareas | ✅ ✅ | crea los cuatro `paso` sin despachar, worker con `--parent`, no duplica en el traspaso, cancela con OK tras la enmienda, nada sin supervisor ni con plan en borrador |
+| E20 aceptación | ✅ ✅ | arreglos como hijas con worker nuevo, sin `send` al viejo; acepta con `task-update` del padre |
+| E21 prueba final | ❌ → ✅ ✅ | en la segunda vuelta creyó que la prueba final la lanzaba el supervisor y no anotó el intento: el paso 8 ahora dice "la lanzás vos, en tu run" y "con cada `worker_done`" |
+| E22 pregunta con gate | ❌ → ✅ ✅ | despachó el paso mismo con `--task`: el paso 9 aclara que el worker del paso sigue con `--parent` (criterio 7 nuevo). Detectó que el spec de una tarea no se edita: con una respuesta que cambia la prueba final, se cancela y se relanza (criterio 5 y pregunta d ampliados) |
+| E17 cierre (regresión) | ✅ | contexto ampliado con la prueba final aprobada |
+| E6 traspaso (regresión) | ⚠️ ⚠️ | criterio 3: hace el chequeo de `run-current` en `none` en la pestaña nueva, por la frase "en esta sesión" de `handoff-clear`; no lo toca esta tarea |

@@ -94,6 +94,41 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
    `run_not_found`, como última acción cerrá tu pestaña con
    `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`, y si no podés, decíselo al
    usuario; si dio `run_not_found`, no la cierres: mostrale el resultado al usuario.
+   El `cierre` `terminado` va solo si la última prueba final aprobó (paso 8), con su commit;
+   `abandonado` no la pide.
+7. **Pasos del plan:** con `plan.md` aceptado, cada `### Tarea <n>` (si no hay, cada ítem de
+   "Orden de trabajo") es un paso. Creá los que falten en
+   `orca orchestration task-list --run <tu run> --full --json`, también al retomar, con
+   `orca orchestration task-create --run <tu run> --task-title "paso <n>: <título>" --spec "<texto del paso>"`.
+   Antes, no crees ninguno. Un paso nunca se despacha: su worker lleva `--parent <id del paso>` en
+   el `worker-start`. Si los pasos del run no coinciden con el plan (títulos, pasos nuevos o
+   quitados), no aceptes ni cierres nada y mandá una `pregunta:`; con el OK, cancelá los que
+   sobran o cambiaron con `task-update --id <paso> --status failed --result "cancelado"` y creá
+   los nuevos.
+   - **Aceptar:** que el worker termine no alcanza. Revisá su entrega (8.2 de las house rules) y,
+     si la aceptás y el paso no tiene un gate abierto,
+     `task-update --id <paso> --status completed --result "aceptado: <tarea hija> · <commit>"`.
+     Si no, lanzá otra hija con `--parent <paso> --task-title "arreglo paso <n>: <qué>"` para un
+     worker nuevo, nunca un `send` al que lo construyó; si el arreglo falla, otra hija más.
+8. **Prueba final:** con todos los pasos aceptados, la lanzás vos, en tu run: completá
+   `assets/prueba-final.md` en tu scratchpad, nunca en el repo, y corré `worker-start` con
+   `--task-title "prueba final"` y esa copia como spec, para un worker nuevo que no trabajó en el
+   intent. Con cada `worker_done` de una prueba final, apruebe o falle, sumá a `avance.md` en la
+   carpeta del intent (`intent/avance.md` en el raíz) un título
+   `## <fecha> · prueba final · run <run> · <tarea>` con su `body`, y commitealo. Si falla, los arreglos son hijas de esa prueba final,
+   con workers nuevos y revisados como un paso, y después va una prueba final nueva; los pasos no
+   se reabren, porque `task-update` pisa su `result`.
+9. **Preguntas que frenan:** si una `pregunta:` frena algo, poné el gate sobre una tarea sin
+   despachar. Si frena un paso, va en el paso, y su worker sigue yendo con `--parent`. Si frena
+   algo que todavía no lanzaste (prueba final o arreglo), creá esa tarea con `task-create`, ponele
+   el gate y, cuando se resuelva, lanzala con `worker-start --task <id>`; si la respuesta cambia
+   lo que tiene que hacer, cancelala (`failed`, `cancelado`) y lanzá otra con el spec completo,
+   porque el spec de una tarea no se edita. Con el id del envío:
+   `orca orchestration gate-create --task <id> --question "<msg_id>: <pregunta>"`. Mientras siga
+   abierto, no aceptes ni lances lo que frena. Con una respuesta válida (la del supervisor, la de
+   tu pestaña o, si difieren, la que elija el usuario), buscá el gate de ese `<msg_id>` en
+   `orca orchestration gate-list --run <tu run> --full --json` y resolvé solo ese con
+   `orca orchestration gate-resolve --id <gate> --resolution "<respuesta>"`.
 
 ## Contexto
 

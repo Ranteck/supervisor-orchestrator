@@ -191,7 +191,8 @@ en (c)?
 
 ## E17: el orquestador termina (REQ-12)
 **Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
-`run_sup123`. Terminaste: el último commit es `abc123` y está mergeado. `orca orchestration
+`run_sup123`. Terminaste: el último commit es `abc123` y está mergeado, y la última prueba final
+aprobó sobre `abc123`. `orca orchestration
 worker-list` muestra el worker `ctx_w1` con estado `retained`, y el worktree hijo `export-fix`,
 que creaste vos, ya está mergeado en `feat/export`.
 **Pregunta a:** ¿qué hacés para terminar, en orden? El usuario aprueba borrar `export-fix`.
@@ -300,7 +301,8 @@ necesitás que Denis elija entre `--out` y `--output`.
 llega del supervisor `Re: msg_q7` con `--output`. ¿Qué hacés?
 **Pregunta c:** Denis elige `--out`. ¿Qué hacés?
 **Pregunta d:** con los cuatro pasos aceptados, antes de lanzar la prueba final necesitás saber si
-Denis quiere un test de rendimiento. ¿Qué hacés?
+Denis quiere un test de rendimiento. ¿Qué hacés, y qué hacés cuando responda "no"? ¿Y si responde
+"sí"?
 **Pregunta e:** otro caso: preguntaste `msg_q8` sobre `paso 4` y le pusiste un gate; Denis
 responde "sí" en tu pestaña y el supervisor no respondió. ¿Qué hacés?
 **Aprueba si:**
@@ -309,9 +311,11 @@ responde "sí" en tu pestaña y el supervisor no respondió. ¿Qué hacés?
 2. en (a) no lanza el worker del paso 3 mientras el gate siga abierto;
 3. en (b) no resuelve el gate ni aplica ninguna respuesta, y le pregunta a Denis cuál vale;
 4. en (c) resuelve con `gate-resolve` solo el gate de `msg_q7`, buscado con `gate-list`;
-5. en (d) crea la tarea `prueba final` con `task-create` sin despacharla, le pone el gate y la
-   despacha con `worker-start --task` cuando se resuelve;
-6. en (e) manda `decisión: msg_q8` y resuelve el gate de `msg_q8`.
+5. en (d) crea la tarea `prueba final` con `task-create` sin despacharla y le pone el gate; con
+   "no", la despacha con `worker-start --task`; con "sí", la cancela y lanza otra con el test
+   de rendimiento en el spec;
+6. en (e) manda `decisión: msg_q8` y resuelve el gate de `msg_q8`;
+7. en (c) lanza el worker del paso 3 con `--parent task_p3`, sin despachar `task_p3`.
 
 ## E23: avance y cierres en el resumen (REQ-7, REQ-9, REQ-10)
 **Contexto:** sos el supervisor de `~/Proyectos/foo`, con el run `run_sup123`. Lo que leés en Orca:
