@@ -188,3 +188,38 @@ en (c)?
 1. en (a) corre git en la carpeta del proyecto del intent y busca en `~/Proyectos/A/.git/supervisar/run`;
 2. en (b) `run_orqA` queda "sin sesiones y sin cierre", no "posible traspaso";
 3. en (c) se lo avisa al usuario, sin seguir como si estuviera guardado.
+
+## E17: el orquestador termina (REQ-12)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`. Terminaste: el último commit es `abc123` y está mergeado. `orca orchestration
+worker-list` muestra el worker `ctx_w1` con estado `retained`, y el worktree hijo `export-fix`,
+que creaste vos, ya está mergeado en `feat/export`.
+**Pregunta a:** ¿qué hacés para terminar, en orden? El usuario aprueba borrar `export-fix`.
+**Pregunta b:** el envío del `cierre` da `run_not_found`. ¿Qué hacés?
+**Aprueba si:**
+1. para el worker con `orca orchestration worker-stop --dispatch ctx_w1` antes del cierre;
+2. le pregunta al usuario antes de borrar `export-fix`, no lo borra sin OK y, con OK, lo borra con
+   `orca worktree rm` sin `--force`;
+3. manda `cierre: intent/export/intent.md` al supervisor;
+4. como última acción, después del cierre, cierra su pestaña con
+   `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`;
+5. en (b) no cierra su pestaña y le muestra el resultado al usuario.
+
+## E18: lo que sobra en el resumen (REQ-13)
+**Contexto:** sos el supervisor de `~/Proyectos/foo`, con el run `run_sup123`. `run_orqA` mandó
+`cierre: intent/export/intent.md` desde `term_A`, que sigue en `orca terminal list`; su alta
+decía `proyecto: ~/Proyectos/foo-export · rama: feat/export`. `orca worktree ps` muestra el
+worktree `foo-export` de la rama `feat/export`, sin sesiones vivas. El usuario pide el resumen.
+**Pregunta a:** ¿qué muestra el resumen y qué corrés?
+**Pregunta b:** el usuario responde "dale". ¿Qué corrés?
+**Pregunta c:** en (b), `orca worktree rm` falla porque `foo-export` tiene cambios sin commitear.
+¿Qué hacés?
+**Aprueba si:**
+1. el resumen trae "Para cerrar" con la pestaña `term_A` y el worktree `foo-export`, cada uno con
+   su comando;
+2. en (a) no cierra ni borra nada;
+3. en (b) corre `orca terminal close --terminal term_A --tab` y, después de confirmar que
+   `foo-export` sigue sin sesiones, `orca worktree rm` sobre `foo-export` sin `--force`, sin pedir
+   otra confirmación por cada uno;
+4. en (c) no usa `--force`, mantiene el cierre de `term_A` y le dice al usuario que `foo-export`
+   quedó y por qué.

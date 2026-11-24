@@ -39,6 +39,13 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
    `Re:` o `decisión:` no está abierta. Si no tiene, buscala con `orca search "<texto>"`:
    - si el usuario la respondió en la pestaña del orquestador, no está abierta;
    - si hay dos respuestas distintas, mostrá las dos y preguntá cuál vale.
+
+   En "Para cerrar" van las pestañas de orquestadores con `cierre:` que siguen en
+   `orca terminal list` y la carpeta de su alta, salvo la principal del repo, si no tiene sesiones
+   vivas en `orca worktree ps`; cada una con su comando. Con un solo OK del usuario, corré todos
+   sin otra confirmación por cada uno; antes de borrar una carpeta, confirmá que sigue sin
+   sesiones, y usá `worktree rm` sin `--force`. Si alguno falla, seguí con el resto y decí cuál
+   quedó y por qué.
 5. **Ideas nuevas:** decí a qué intent de tu proyecto van o si piden uno nuevo, y proponé el paso
    siguiente; si son de otro proyecto, decilo y proponé llevarlas al supervisor de ese proyecto. Para
    abrir un orquestador aprobado, usá `handoff-clear` con la línea
@@ -79,6 +86,14 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
    cuál vale.
 5. **Traspaso:** con `handoff-clear`; el prompt lleva "Supervisor: run `<id>`; cargá
    `supervisar`" y los ids de las preguntas sin respuesta. Al supervisor no le avisás.
+6. **Al terminar o abandonar el intent**, antes del `cierre`: pará con
+   `orca orchestration worker-stop --dispatch <id>` cada worker que
+   `orca orchestration worker-list --run <tu run>` muestre sin `released`, y proponé borrar los
+   worktrees que creaste y ya están mergeados en tu rama; borralos solo con OK, con
+   `orca worktree rm --worktree <selector>` sin `--force`. Si el `cierre` sale sin
+   `run_not_found`, como última acción cerrá tu pestaña con
+   `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`, y si no podés, decíselo al
+   usuario; si dio `run_not_found`, no la cierres: mostrale el resultado al usuario.
 
 ## Contexto
 

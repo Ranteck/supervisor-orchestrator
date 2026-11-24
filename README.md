@@ -71,6 +71,9 @@ that keep it light:
 - **One run per orchestrator.** Its workers and reviews run inside that run, and a handoff carries
   the whole run.
 - **No private notes.** The supervisor rebuilds everything from Orca and `intent/`.
+- **Clean exit.** When it finishes, an orchestrator stops its workers, offers to remove the
+  worktrees it created and merged, and closes its own tab. The summary lists leftover tabs and
+  worktrees under "Para cerrar", and one OK closes them all.
 
 Two skills complete the scheme:
 

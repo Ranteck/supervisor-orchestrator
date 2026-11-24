@@ -15,6 +15,10 @@
 - <runs> sobre <el mismo intent, o la misma rama>
 - <run>: <qué lo bloquea>
 
+## Para cerrar (un OK cierra todo)
+- pestaña `<handle>` de <run>, cerrado: `orca terminal close --terminal <handle> --tab`
+- worktree `<nombre>` (<rama>), sin sesiones: `orca worktree rm --worktree <selector>`
+
 ## Propuestas (esperan tu OK)
 - <acción concreta>
 

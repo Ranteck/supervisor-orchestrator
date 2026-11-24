@@ -35,6 +35,16 @@ Estado: aceptado
 - REQ-11 SHOULD: Al pasar su umbral de contexto (supervisor 30 %, orquestador 40 %), el agente
   propone el traspaso y espera aprobación. Origen: Restricciones, "Hago handoff cerca del 30 %
   en el supervisor y del 40 % en un orquestador".
+- REQ-12 MUST: Al terminar o abandonar un intent, el orquestador cierra los workers que siguen
+  abiertos en su run y propone borrar los worktrees que creó y ya están mergeados (los borra con
+  OK); si el cierre sale sin `run_not_found`, cierra su pestaña como última acción y, si no, le
+  muestra el resultado al usuario. Origen: Resultado
+  esperado, "la pestaña anterior no queda viva" (agregado 2026-11-18, aprobado por Denis).
+- REQ-13 MUST: El resumen del supervisor lista lo que sobra (pestañas de orquestadores cerrados
+  que siguen abiertas y worktrees de intents terminados) y, con un solo OK del usuario, lo cierra;
+  si algo no se puede cerrar, sigue con el resto y lo informa.
+  Origen: Resultado esperado, "propone acciones y pide aprobación" (agregado 2026-11-18,
+  aprobado por Denis).
 - REQ-14 SHOULD: Al arrancar, de cero o por traspaso, el supervisor nombra su pestaña de Orca
   `sup-<repo>`, para que el usuario filtre los supervisores por ese prefijo. Origen: Problema, "me
   termino volviendo loco saltando entre chat y chat" (agregado 2026-11-24, aprobado por Denis).
@@ -75,6 +85,13 @@ Estado: aceptado
 - GIVEN ningún supervisor activo
 - WHEN un orquestador hace traspaso
 - THEN todo es igual que hoy
+
+### Cierre (REQ-12, REQ-13)
+- GIVEN un orquestador que termina su intent con un worker abierto y un worktree mergeado
+- WHEN manda el cierre
+- THEN antes cerró el worker y preguntó por el worktree, y después cerró su pestaña; si algo
+  quedó abierto, el siguiente resumen del supervisor lo lista en "Para cerrar" y lo cierra solo
+  con el OK del usuario
 
 ### Pestaña del supervisor (REQ-14)
 - GIVEN el repo `foo`
