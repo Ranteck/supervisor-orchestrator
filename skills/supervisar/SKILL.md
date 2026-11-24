@@ -40,9 +40,21 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
    - si el usuario la respondió en la pestaña del orquestador, no está abierta;
    - si hay dos respuestas distintas, mostrá las dos y preguntá cuál vale.
 
+   **Avance y cierres:** por cada alta, `orca orchestration task-list --run <su run> --full --json`.
+   El avance son los pasos (`paso <n>:`) `completed` sobre el total sin los cancelados (`failed`
+   con `cancelado`), más los `blocked` y, si la última prueba final falló, "prueba final: falla";
+   sin pasos es "sin plan", que no es un problema, y con `run_not_found`, "no verificable". Un
+   `cierre` `terminado` figura terminado solo si la tarea de título exacto `prueba final` con el
+   `created_at` más reciente está `completed`, la primera línea de su `result.body` es
+   `prueba final: aprueba · commit <sha>`, sigue una línea por chequeo y ese sha empieza con el
+   commit del cierre. Si no hay prueba final, la última está en curso o falló, o es de otro commit,
+   figura "sin verificar"; si `task-list` da `run_not_found` o el `result` de una prueba
+   `completed` no se puede leer, "no verificable". Un `abandonado` figura abandonado. Nunca crees
+   tareas, y archivar un intent terminado va solo en "Propuestas".
+
    En "Para cerrar" van las pestañas de orquestadores con `cierre:` que siguen en
    `orca terminal list` y la carpeta de su alta, salvo la principal del repo, si no tiene sesiones
-   vivas en `orca worktree ps`; cada una con su comando. Con un solo OK del usuario, corré todos
+   vivas en `orca worktree ps` y su intent no figura "sin verificar" ni "no verificable"; cada una con su comando. Con un solo OK del usuario, corré todos
    sin otra confirmación por cada uno; antes de borrar una carpeta, confirmá que sigue sin
    sesiones, y usá `worktree rm` sin `--force`. Si alguno falla, seguí con el resto y decí cuál
    quedó y por qué.

@@ -86,3 +86,12 @@ los criterios.
 | E22 pregunta con gate | ❌ → ✅ ✅ | despachó el paso mismo con `--task`: el paso 9 aclara que el worker del paso sigue con `--parent` (criterio 7 nuevo). Detectó que el spec de una tarea no se edita: con una respuesta que cambia la prueba final, se cancela y se relanza (criterio 5 y pregunta d ampliados) |
 | E17 cierre (regresión) | ✅ | contexto ampliado con la prueba final aprobada |
 | E6 traspaso (regresión) | ⚠️ ⚠️ | criterio 3: hace el chequeo de `run-current` en `none` en la pestaña nueva, por la frase "en esta sesión" de `handoff-clear`; no lo toca esta tarea |
+
+## Tareas por intent: supervisor (E23), Tarea 3
+2026-11-24 · subagentes Haiku (`orquestar:explorador`) · sin los criterios.
+
+| Escenario | Resultado | Nota |
+| --- | --- | --- |
+| E23 avance y cierres | ✅ ✅ | A terminado 4/4; B, C y H "sin verificar"; D "no verificable"; E abandonado; F "sin plan"; G 1/3 con 1 bloqueado; solo `foo-export` en "Para cerrar"; archivar como propuesta |
+| E3 resumen (regresión) | ✅ | |
+| E18 lo que sobra (regresión) | ✅ | contexto ampliado con el cierre `terminado` y la prueba final aprobada |

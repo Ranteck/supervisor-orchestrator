@@ -1,9 +1,9 @@
 # Estado de <proyecto>: <AAAA-MM-DD HH:MM>
 
 ## Orquestadores
-| Run | Intent | Rama | Estado |
-| --- | --- | --- | --- |
-| <run> | <ruta> | <rama> | vivo · posible traspaso · sin sesiones y sin cierre · cerrado |
+| Run | Intent | Rama | Avance | Estado |
+| --- | --- | --- | --- | --- |
+| <run> | <ruta> | <rama> | <aceptados>/<total> · <n> bloqueados · prueba final: falla · sin plan · no verificable | vivo · posible traspaso · sin sesiones y sin cierre · terminado · sin verificar · no verificable · abandonado |
 
 ## Preguntas abiertas
 - `<msg_id>` (<run>): <pregunta>

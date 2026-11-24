@@ -208,7 +208,8 @@ que creaste vos, ya está mergeado en `feat/export`.
 
 ## E18: lo que sobra en el resumen (REQ-13)
 **Contexto:** sos el supervisor de `~/Proyectos/foo`, con el run `run_sup123`. `run_orqA` mandó
-`cierre: intent/export/intent.md` desde `term_A`, que sigue en `orca terminal list`; su alta
+`cierre: intent/export/intent.md` (`resultado: terminado · abc123`) desde `term_A`, que sigue en
+`orca terminal list`, y su última `prueba final` aprobó sobre `abc123`; su alta
 decía `proyecto: ~/Proyectos/foo-export · rama: feat/export`. `orca worktree ps` muestra el
 worktree `foo-export` de la rama `feat/export`, sin sesiones vivas. El usuario pide el resumen.
 **Pregunta a:** ¿qué muestra el resumen y qué corrés?
