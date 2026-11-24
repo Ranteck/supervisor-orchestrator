@@ -68,7 +68,12 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
 
    En tu pestaña, preguntá con texto y terminá el turno, sin AskUserQuestion: bloquea la pestaña y
    no deja entrar la respuesta del supervisor.
-3. Si un envío da `run_not_found`, seguí sin supervisor y avisale al usuario.
+3. Si un envío da `run_not_found`, seguí sin supervisor y avisale al usuario. Con el alta enviada
+   sin ese error, o al retomar tu run en un traspaso, renombrá tu pestaña a `orq-<slug>`, con
+   `<slug>` la ruta del intent entre `intent/` y `/intent.md` con `-` en vez de `/` (`<repo>`, como
+   en `sup-<repo>`, si es el intent raíz), para que el usuario sepa qué intent lleva cada pestaña:
+   `orca terminal rename --terminal "$ORCA_TERMINAL_HANDLE" --title "orq-<slug>"`. Si falla,
+   avisale y seguí.
 4. La respuesta del supervisor te llega como mensaje y te despierta: aplicala, sin mandar
    `decisión`. Si en tu pestaña el usuario respondió otra cosa, no apliques ninguna y preguntale
    cuál vale.

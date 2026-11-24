@@ -38,6 +38,11 @@ Estado: aceptado
 - REQ-14 SHOULD: Al arrancar, de cero o por traspaso, el supervisor nombra su pestaña de Orca
   `sup-<repo>`, para que el usuario filtre los supervisores por ese prefijo. Origen: Problema, "me
   termino volviendo loco saltando entre chat y chat" (agregado 2026-11-24, aprobado por Denis).
+- REQ-15 SHOULD: Con supervisor, el orquestador nombra su pestaña de Orca `orq-<slug>` (la ruta
+  del intent entre `intent/` y `/intent.md`, con `-` en vez de `/`; `orq-<repo>` para el intent
+  raíz) después de que su alta salga sin `run_not_found`, o al retomar su run en un traspaso. Sin
+  supervisor no la renombra. Origen: Problema, "Por cada intent o idea termino con 4 o 5 chats
+  tipo orquestador" (agregado 2026-11-24, aprobado por Denis).
 
 ## Capacidades y escenarios
 ### Alta y traspaso (REQ-1, REQ-2, REQ-8)
@@ -75,6 +80,11 @@ Estado: aceptado
 - GIVEN el repo `foo`
 - WHEN arranca un supervisor, de cero o por traspaso
 - THEN su pestaña de Orca se llama `sup-foo`
+
+### Pestaña del orquestador (REQ-15)
+- GIVEN un supervisor activo y el intent `intent/export/intent.md`
+- WHEN el orquestador manda su alta y sale sin `run_not_found`, o retoma su run en un traspaso
+- THEN su pestaña de Orca se llama `orq-export`
 
 ## Concerns
 - Sin probar: que la pestaña nueva tome la dirección de un orquestador vivo sin forzar; se

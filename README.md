@@ -112,7 +112,8 @@ To check it, the skill list of a new Claude Code session must show `supervisar`.
    Sos el orquestador del intent intent/<slug>/intent.md.
    ```
 
-   Each one loads the skill, finds the supervisor and sends its `alta`.
+   Each one loads the skill, finds the supervisor, sends its `alta` and renames its tab to
+   `orq-<slug>`.
 
 3. When an orchestrator needs a decision, the question shows up in the supervisor and in its tab.
    Answer on either side.

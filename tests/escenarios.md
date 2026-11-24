@@ -10,12 +10,15 @@ rama `feat/export`, intent aceptado en `intent/export/intent.md`.
 ## E1: alta (REQ-1, REQ-2, REQ-4)
 **Prompt:** "Supervisor: run `run_sup123`. Arrancá el intent `intent/export/`."
 `orca orchestration run-current` devuelve `runId=none`.
-**Pregunta:** ¿qué hacés antes de empezar y durante el trabajo, en cuanto a mensajes?
+**Pregunta:** ¿qué hacés antes de empezar y durante el trabajo, en cuanto a mensajes y a tu
+pestaña?
 **Aprueba si:**
 1. crea su run (`run-create`) antes de mandar nada;
 2. manda un solo mensaje al supervisor (`send --to run:run_sup123`, sin `--run`), con intent,
    proyecto, rama y su propio run;
-3. no planea mandarle progreso.
+3. no planea mandarle progreso;
+4. después del alta, renombra su pestaña con
+   `orca terminal rename --terminal "$ORCA_TERMINAL_HANDLE" --title "orq-export"`.
 
 ## E2: pregunta y decisión (REQ-3, REQ-4)
 **Contexto:** el orquestador tiene el run `run_orqA` y el supervisor es `run_sup123`. Mientras
@@ -60,8 +63,8 @@ está trabajando A.
 
 ## E5: supervisores (REQ-9)
 **Contexto:** sos un orquestador que arranca un intent. Nadie te habló de un supervisor.
-**Pregunta:** antes de empezar, ¿hacés algo para coordinarte con otras sesiones? Se corre en tres
-variantes:
+**Pregunta:** antes de empezar, ¿hacés algo para coordinarte con otras sesiones o con tu pestaña?
+Se corre en tres variantes:
 - (a) `<repo>/.git/supervisar/run` no existe (`<repo>/.git` es el `--git-common-dir` de tu repo);
 - (b) el archivo contiene `run_s2`;
 - (c) el archivo contiene `run_s9`, y el alta falla con `run_not_found`.
@@ -71,17 +74,24 @@ variantes:
 2. en (a) trabaja como siempre y no crea uno;
 3. en (b) manda el alta a `run_s2`;
 4. en (c) sigue sin supervisor y se lo avisa al usuario;
-5. en ningún caso planea mandar progreso.
+5. en ningún caso planea mandar progreso;
+6. renombra su pestaña a `orq-export` solo en (b), después del alta; en (a) y (c) no la renombra.
 
 ## E6: traspaso (REQ-8, REQ-10)
 **Contexto:** sos un orquestador con el run `run_orqA` y supervisor `run_sup123`, al 40 % de
 contexto. El usuario dice "hacé el handoff". Seguí
 `/home/denis/.claude/skills/handoff-clear/SKILL.md`.
+**Pregunta a:** ¿qué lleva el prompt del traspaso y qué corrés? Se evalúa con los criterios 1 a 4.
+**Pregunta b:** sos la pestaña nueva; se evalúa con el criterio 5. Tu prompt dice que retomes el
+intent `intent/export/`, trae "Supervisor: run `run_sup123`; cargá `supervisar`" y
+`run-use --id run_orqA`. ¿Qué hacés al arrancar?
 **Aprueba si:**
 1. el prompt del traspaso incluye "Supervisor: run `run_sup123`" y nombra `supervisar`;
 2. la pestaña nueva retoma `run_orqA` con `run-use`;
 3. la vieja se cierra solo después de que su `run-current` dé `none`, como última acción;
-4. no le manda nada al supervisor por el traspaso.
+4. no le manda nada al supervisor por el traspaso;
+5. en (b), después de retomar `run_orqA`, renombra su pestaña con
+   `orca terminal rename --terminal "$ORCA_TERMINAL_HANDLE" --title "orq-export"` y no manda alta.
 
 ## E7: concilio durante el traspaso (REQ-2, REQ-8)
 **Contexto:** sos un orquestador con el run `run_orqA` y supervisor `run_sup123`. Necesitás que
