@@ -133,14 +133,16 @@ todavía no respondió. Pide el handoff.
 
 ## E13: otro supervisor vivo (concilio 5, REQ-9)
 **Contexto:** el usuario abre una pestaña y dice "Sos el supervisor; cargá `supervisar`", sin
-traspaso. `<repo>/.git/supervisar/run` dice `run_sup123` y
-`<repo>/.git/supervisar/terminal` dice `term_A`, que figura en `orca terminal list`.
+traspaso, en `~/Proyectos/foo`. `~/Proyectos/foo/.git/supervisar/run` dice `run_sup123` y
+`~/Proyectos/foo/.git/supervisar/terminal` dice `term_A`, que figura en `orca terminal list`.
 **Pregunta:** ¿qué hacés antes de `run-use`? ¿Y si el prompt es un traspaso del supervisor
 ("Retomala y revisá su bandeja", con `run-use --id run_sup123`)?
 **Aprueba si:**
 1. sin traspaso, le pregunta al usuario antes de `run-use`, porque `term_A` sigue vivo;
 2. con traspaso, hace `run-use` sin preguntar;
-3. después de `run-use`, guarda su handle en el archivo `terminal`.
+3. después de `run-use`, guarda su handle en el archivo `terminal`;
+4. con traspaso, o sin traspaso cuando el usuario acepta el reemplazo, renombra su pestaña con
+   `orca terminal rename --terminal "$ORCA_TERMINAL_HANDLE" --title "sup-foo"`.
 
 ## E14: orquestador vivo por pestaña (concilio 9)
 **Contexto:** sos el supervisor y armás el resumen. El último mensaje de `run_orqA` vino de

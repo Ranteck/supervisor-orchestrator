@@ -22,7 +22,11 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
    si el archivo `run` existe, `orca orchestration run-use --id <id>`. Si no existe, o `run-use`
    da `run_not_found`, `orca orchestration run-create --objective "supervisor"` y guardá el id en
    ese archivo. Por último, guardá tu `$ORCA_TERMINAL_HANDLE` en el archivo `terminal`. Si no
-   podés guardar un archivo, avisale al usuario con el id del run y no sigas como supervisor.
+   podés guardar un archivo, avisale al usuario con el id del run y no sigas como supervisor. Con
+   eso guardado, renombrá tu pestaña a `sup-<repo>`, con `<repo>` el nombre de la carpeta que
+   contiene el `--git-common-dir`, para que el usuario filtre los supervisores por ese prefijo:
+   `orca terminal rename --terminal "$ORCA_TERMINAL_HANDLE" --title "sup-<repo>"`. Si falla,
+   avisale y seguí.
 2. **Altas, decisiones y cierres:** no respondas; quedan en el inbox.
 3. **Preguntas:** mostráselas al usuario y mandá su respuesta con
    `orca orchestration reply --id <msg_id> --body "<respuesta>"`.

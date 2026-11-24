@@ -103,7 +103,8 @@ To check it, the skill list of a new Claude Code session must show `supervisar`.
    Sos el supervisor; cargá `supervisar`.
    ```
 
-   The supervisor creates its run, saves it in `.git/supervisar/run` and waits for messages.
+   The supervisor creates its run, saves it in `.git/supervisar/run`, renames its tab to
+   `sup-<repo>` so you can filter supervisors by that prefix, and waits for messages.
 
 2. Open the orchestrators as usual, for example:
 

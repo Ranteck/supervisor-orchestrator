@@ -35,6 +35,9 @@ Estado: aceptado
 - REQ-11 SHOULD: Al pasar su umbral de contexto (supervisor 30 %, orquestador 40 %), el agente
   propone el traspaso y espera aprobación. Origen: Restricciones, "Hago handoff cerca del 30 %
   en el supervisor y del 40 % en un orquestador".
+- REQ-14 SHOULD: Al arrancar, de cero o por traspaso, el supervisor nombra su pestaña de Orca
+  `sup-<repo>`, para que el usuario filtre los supervisores por ese prefijo. Origen: Problema, "me
+  termino volviendo loco saltando entre chat y chat" (agregado 2026-11-24, aprobado por Denis).
 
 ## Capacidades y escenarios
 ### Alta y traspaso (REQ-1, REQ-2, REQ-8)
@@ -67,6 +70,11 @@ Estado: aceptado
 - GIVEN ningún supervisor activo
 - WHEN un orquestador hace traspaso
 - THEN todo es igual que hoy
+
+### Pestaña del supervisor (REQ-14)
+- GIVEN el repo `foo`
+- WHEN arranca un supervisor, de cero o por traspaso
+- THEN su pestaña de Orca se llama `sup-foo`
 
 ## Concerns
 - Sin probar: que la pestaña nueva tome la dirección de un orquestador vivo sin forzar; se
