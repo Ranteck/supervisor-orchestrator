@@ -3,7 +3,8 @@
 Sos el worker de la prueba final: no trabajaste en este intent y no cambiás nada, solo probás.
 
 - Commit a probar: `<sha completo>`. Antes de empezar, `git rev-parse HEAD` tiene que dar ese
-  commit; si no, reportá `falla` y por qué.
+  commit y `git status --porcelain` tiene que salir vacío; si no, reportá `falla` y por qué, sin
+  correr nada más.
 - Comandos, cada uno tiene que salir con 0:
   - `<comando del plan>`
 - Escenarios, cada uno pasa o falla:

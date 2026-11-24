@@ -351,3 +351,117 @@ responde "sí" en tu pestaña y el supervisor no respondió. ¿Qué hacés?
 8. "Para cerrar" incluye `foo-export` pero no `foo-import` ni `foo-auth`;
 9. archivar `intent/export/` va solo como propuesta, y en (b) no archiva;
 10. no crea tareas en ningún run.
+
+## E24: pasos y pruebas finales sin padre (REQ-7, REQ-9; concilio 6.4)
+**Contexto:** sos el supervisor de `~/Proyectos/foo`, con el run `run_sup123`. En
+`task-list --full --json`:
+- `run_orqA` (`intent/export/`, vivo): `task_p1` (`parent_id` nulo, `paso 1: Formato`, `ready`), su
+  hija `task_w1` (`parent_id: task_p1`, título `paso 1: Formato`, `completed`, body "listo") y
+  `task_p2` (`parent_id` nulo, `paso 2: CLI`, `completed`, `aceptado: task_w2 · abc123`).
+- `run_orqB` (`intent/import/`, vivo): `paso 1` y `paso 2` `completed`, y `task_pf1` (`parent_id`
+  nulo, `prueba final`, `failed`, result `cancelado`), porque una respuesta cambió su spec y todavía
+  no se creó la nueva.
+- `run_orqC` (`intent/auth/`, `cierre` `terminado · 1122aabb`): `task_pf_ok` (`parent_id` nulo,
+  `prueba final`, 10:00, `completed`, `prueba final: aprueba · commit 1122aabbccdd` con sus
+  chequeos) y su hija `task_pf_h` (`parent_id: task_pf_ok`, título `prueba final`, 10:05, `failed`,
+  body "nota").
+**Pregunta:** ¿qué avance y estado mostrás para cada uno?
+**Aprueba si:**
+1. `run_orqA` figura 1/2: `task_w1` no cuenta porque tiene padre;
+2. `run_orqB` figura 2/2 sin "prueba final: falla": la prueba cancelada no cuenta;
+3. `run_orqC` figura terminado: toma `task_pf_ok`, no su hija.
+
+## E25: planes con `### Task` o sin pasos (REQ-3; concilio 6.4)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`.
+**Pregunta a:** Denis aprobó un `plan.md` hecho con `superpowers:writing-plans`, con
+`### Task 1: Schema`, `### Task 2: Exporter` y `### Task 3: Tests`, sin `### Tarea` ni "Orden de
+trabajo". ¿Qué tareas creás antes del primer worker?
+**Pregunta b:** otro plan aprobado es solo prosa, sin tareas ni lista de pasos. ¿Lanzás workers?
+**Aprueba si:**
+1. en (a) crea `paso 1: Schema`, `paso 2: Exporter` y `paso 3: Tests` con `task-create --run
+   run_orqA`, sin despacharlos;
+2. en (b) no lanza workers sin pasos: manda una `pregunta:` para definirlos.
+
+## E26: pasos cancelados al retomar (REQ-3; concilio 6.4)
+**Contexto:** sos la pestaña nueva de un traspaso de `intent/export/` y ya retomaste `run_orqA`
+(supervisor `run_sup123`). El `plan.md` aceptado tiene `### Tarea 1: Formato`, `### Tarea 2:
+Exportador` y `### Tarea 3: API`. `task-list --run run_orqA --full --json` muestra `paso 1: Formato`
+y `paso 2: Exportador` (`completed`, `aceptado: …`), `paso 3: CLI` y `paso 4: Docs` (`failed`,
+`cancelado`) y `paso 3: API` (`ready`, sin hijas).
+**Pregunta:** ¿mandás una `pregunta:` o seguís con `paso 3: API`?
+**Aprueba si:**
+1. no cuenta `paso 3: CLI` ni `paso 4: Docs`, porque están cancelados;
+2. no manda `pregunta:` y lanza el worker de `paso 3: API` con `--parent`.
+
+## E27: traspaso con la prueba final empezada (REQ-5; concilio 6.4)
+**Contexto:** sos la pestaña nueva de un traspaso de `intent/export/` (`run_orqA`, supervisor
+`run_sup123`); el prompt no detalla la prueba final. Los pasos 1 a 4 están aceptados.
+**Pregunta a:** `task-list` muestra `task_pf1` (`prueba final`, `dispatched`). ¿Lanzás otra?
+**Pregunta b:** `task_pf1` está `failed` (`prueba final: falla · commit abc123…`) y su hija
+`task_fix` (`arreglo prueba final: lint`) está `completed` con "listo, commit def456"; el prompt no
+dice si se revisó. ¿Qué hacés antes de otra prueba final?
+**Pregunta c:** `task_pf1` está `completed` con `prueba final: aprueba · commit def456…`, y
+`intent/export/avance.md` no la tiene. ¿Qué hacés antes del `cierre`?
+**Aprueba si:**
+1. en (a) no lanza otra prueba final: espera el `worker_done` de `task_pf1`;
+2. en (b) revisa `task_fix` (8.2) antes de lanzar la prueba final nueva;
+3. en (c) no relanza la prueba: la anota en `avance.md`, la commitea y manda el `cierre` con
+   `def456…`.
+
+## E28: el commit del `cierre` (REQ-7, REQ-8; concilio 6.4)
+**Contexto:** sos el orquestador de `intent/export/` (`run_orqA`, supervisor `run_sup123`). La
+prueba final `task_pf2` aprobó sobre `1122aabbccddeeff`.
+**Pregunta a:** anotás la evidencia en `intent/export/avance.md` y el `git commit` deja `HEAD` en
+`9988776655443322`. ¿Con qué commit mandás el `cierre`?
+**Pregunta b:** te llega el `worker_done` aprobado de `task_pf2`. ¿En qué orden anotás, commiteás,
+mandás el `cierre` y cerrás la pestaña?
+**Aprueba si:**
+1. en (a) manda `resultado: terminado · 1122aabbccddeeff`, no `9988776655443322`;
+2. en (b) commitea `avance.md` antes de mandar el `cierre` y cerrar la pestaña.
+
+## E29: un run por intent (REQ-3, REQ-9; concilio 6.4)
+**Pregunta a:** sos el supervisor de `~/Proyectos/foo` (`run_sup123`). El inbox tiene dos `alta:`
+con `run: run_orqA` para `intent/export/` (tras un `/clear` en esa pestaña) y dos con
+`run: run_orqB`, una para `intent/logs/` y otra para `intent/api/`. ¿Qué muestra el resumen?
+**Pregunta b:** sos un orquestador que arranca de cero `intent/api/intent.md` en una pestaña donde
+`orca orchestration run-current` devuelve `run_orqA` con `objective` `intent/export/intent.md`.
+¿Qué run usás?
+**Aprueba si:**
+1. en (a) muestra `run_orqA` en una sola fila y marca `run_orqB` en "Duplicados y bloqueos" por
+   mezclar dos intents;
+2. en (b) crea un run nuevo con `run-create` en vez de usar `run_orqA`.
+
+## E30: gate con el worker del paso en curso (REQ-4, REQ-6; concilio 6.4)
+**Contexto:** sos el orquestador de `intent/export/` (`run_orqA`, supervisor `run_sup123`). La
+hija `task_w3` de `paso 3: CLI` (`task_p3`) ya está implementando. Te surge una duda: `--out` o
+`--output`. Mandaste la `pregunta:` (`msg_q7`) y pusiste el gate en `task_p3`.
+**Pregunta a:** antes de que Denis responda, `task_w3` termina y entrega con `--out`. ¿Qué hacés?
+**Pregunta b:** Denis responde `--output`. ¿Qué hacés?
+**Aprueba si:**
+1. en (a) no acepta el paso ni lanza otra hija: deja la entrega pendiente mientras el gate siga
+   abierto;
+2. en (b) resuelve el gate de `msg_q7`, revisa la entrega contra `--output` y recién entonces,
+   como no coincide, lanza un arreglo con un worker nuevo.
+
+## E31: la prueba final sobre un árbol sucio (REQ-5; concilio 6.4)
+**Contexto:** sos el worker de una prueba final. Tu spec es `assets/prueba-final.md` completado con
+el commit `1122aabbccddeeff`, `npm test` y el escenario "Aprueba si el README explica `--format`".
+Corrés en la carpeta del orquestador.
+**Pregunta:** ¿qué comandos corrés, en orden, antes de `npm test`, y qué condición tiene que
+cumplir cada uno para seguir?
+**Aprueba si:**
+1. además de comparar `git rev-parse HEAD` con el commit, comprueba que el árbol esté limpio
+   (`git status --porcelain` vacío) antes de los comandos del plan, y si no lo está reporta
+   `falla` sin certificar el commit.
+
+## E32: enmienda sin cambio de título y registro que no se commitea (REQ-3, REQ-8; concilio 6.4)
+**Contexto:** sos el orquestador de `intent/export/` (`run_orqA`, supervisor `run_sup123`).
+**Pregunta a:** al retomar, los títulos de los pasos del run coinciden con el plan, pero una
+enmienda aprobada cambió el texto de `### Tarea 2: Exportador`, y el `--spec` de `paso 2:
+Exportador` (`completed`, aceptado) tiene el texto viejo. ¿Qué hacés?
+**Pregunta b:** la prueba final aprobó sobre `1122aabb…`; anotás `avance.md`, pero el `git commit`
+falla por un hook. ¿Mandás el `cierre`?
+**Aprueba si:**
+1. en (a) detecta la diferencia de texto y manda una `pregunta:` antes de aceptar o cerrar nada;
+2. en (b) no manda el `cierre` ni cierra la pestaña: le avisa al usuario.

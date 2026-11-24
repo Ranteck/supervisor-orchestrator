@@ -41,10 +41,10 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
    - si hay dos respuestas distintas, mostrá las dos y preguntá cuál vale.
 
    **Avance y cierres:** por cada alta, `orca orchestration task-list --run <su run> --full --json`.
-   El avance son los pasos (`paso <n>:`) `completed` sobre el total sin los cancelados (`failed`
-   con `cancelado`), más los `blocked` y, si la última prueba final falló, "prueba final: falla";
+   Solo cuentan las tareas sin padre (`parent_id` nulo) y sin cancelar (`failed` con `cancelado`).
+   El avance son los pasos (`paso <n>:`) `completed` sobre el total, más los `blocked` y, si la última prueba final falló, "prueba final: falla";
    sin pasos es "sin plan", que no es un problema, y con `run_not_found`, "no verificable". Un
-   `cierre` `terminado` figura terminado solo si la tarea de título exacto `prueba final` con el
+   `cierre` `terminado` figura terminado solo si la de título exacto `prueba final` con el
    `created_at` más reciente está `completed`, la primera línea de su `result.body` es
    `prueba final: aprueba · commit <sha>`, sigue una línea por chequeo y ese sha empieza con el
    commit del cierre. Si no hay prueba final, la última está en curso o falló, o es de otro commit,
@@ -106,15 +106,17 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
    `run_not_found`, como última acción cerrá tu pestaña con
    `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`, y si no podés, decíselo al
    usuario; si dio `run_not_found`, no la cierres: mostrale el resultado al usuario.
-   El `cierre` `terminado` va solo si la última prueba final aprobó (paso 8), con su commit;
-   `abandonado` no la pide.
-7. **Pasos del plan:** con `plan.md` aceptado, cada `### Tarea <n>` (si no hay, cada ítem de
-   "Orden de trabajo") es un paso. Creá los que falten en
+   El `cierre` `terminado` va solo si la última prueba final aprobó (paso 8) y su registro ya
+   está commiteado, y lleva el commit probado de su `body`, no el del registro; `abandonado` no
+   la pide.
+7. **Pasos del plan:** con `plan.md` aceptado, cada `### Tarea <n>` o `### Task <n>` (si no hay,
+   cada ítem de "Orden de trabajo") es un paso; si el plan no tiene ninguno, mandá una `pregunta:`
+   antes de lanzar workers. Creá los que falten en
    `orca orchestration task-list --run <tu run> --full --json`, también al retomar, con
    `orca orchestration task-create --run <tu run> --task-title "paso <n>: <título>" --spec "<texto del paso>"`.
    Antes, no crees ninguno. Un paso nunca se despacha: su worker lleva `--parent <id del paso>` en
-   el `worker-start`. Si los pasos del run no coinciden con el plan (títulos, pasos nuevos o
-   quitados), no aceptes ni cierres nada y mandá una `pregunta:`; con el OK, cancelá los que
+   el `worker-start`. Si los pasos sin cancelar del run no coinciden con el plan (título o
+   `--spec`, pasos nuevos o quitados), no aceptes ni cierres nada y mandá una `pregunta:`; con el OK, cancelá los que
    sobran o cambiaron con `task-update --id <paso> --status failed --result "cancelado"` y creá
    los nuevos.
    - **Aceptar:** que el worker termine no alcanza. Revisá su entrega (8.2 de las house rules) y,

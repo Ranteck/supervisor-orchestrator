@@ -73,3 +73,18 @@ se reescribió y se volvió a correr.
 | E21 prueba final | ❌ | no crea una tarea `prueba final` para un worker nuevo (1) ni dice dónde va el spec (2); ante el fallo pregunta si aceptar el lint, no registra en `avance.md` (3, 4); el `cierre` con el SHA probado y el `abandonado` aprueban |
 | E22 pregunta con gate | ❌ | no pone gates (1, 4, 5, 6); conflicto de respuestas y no lanzar mientras espera, aprueban |
 | E23 resumen | ❌ | sin avance (1, 7), sin "sin verificar" ni "sin plan" (2, 3, 6); propone cerrar pestañas y `foo-export`, y retiene B, C y D sin etiqueta |
+
+## Concilio 6.4 sobre e42f796..8c808f1 (E24–E32)
+2026-11-24 · subagentes Haiku (`orquestar:explorador`) · sin los criterios.
+
+| Escenario | Resultado | Falla |
+| --- | --- | --- |
+| E24 sin padre | ❌ | toma como prueba final vigente una hija titulada `prueba final` (3) |
+| E25 `### Task` | ❌ | no reconoce `### Task <n>` como pasos (1) |
+| E26 cancelados al retomar | ❌ | cuenta los pasos cancelados y manda una `pregunta:` (2) |
+| E27 prueba final empezada | ❌ | en (c) pregunta con qué commit cerrar tras commitear `avance.md` (3) |
+| E28 commit del cierre | ✅ | sin cambio en la skill; queda como regresión |
+| E29 un run por intent | ✅ | sin cambio en la skill; queda como regresión |
+| E30 gate con worker en curso | ✅ | sin cambio en la skill; queda como regresión |
+| E31 árbol sucio | ❌ | la plantilla solo compara `HEAD` (la primera versión del escenario daba el `git status` y se reescribió) |
+| E32 enmienda y registro | ❌ | en (a) compara solo títulos y no manda la `pregunta:`; (b) aprueba |

@@ -95,3 +95,12 @@ los criterios.
 | E23 avance y cierres | ✅ ✅ | A terminado 4/4; B, C y H "sin verificar"; D "no verificable"; E abandonado; F "sin plan"; G 1/3 con 1 bloqueado; solo `foo-export` en "Para cerrar"; archivar como propuesta |
 | E3 resumen (regresión) | ✅ | |
 | E18 lo que sobra (regresión) | ✅ | contexto ampliado con el cierre `terminado` y la prueba final aprobada |
+
+## Concilio 6.4: arreglos (E24–E32)
+2026-11-24 · subagentes Haiku · sin los criterios.
+
+| Escenario | Resultado | Nota |
+| --- | --- | --- |
+| E24, E25, E26, E31, E32 | ✅ ✅ | pasos y prueba final sin padre ni cancelados; `### Task`; comparar título o `--spec`; árbol limpio |
+| E27 | ✅ ✅ | cierra con el commit probado después de commitear `avance.md` |
+| E21, E23 (regresión) | ✅ | |
