@@ -62,3 +62,14 @@ se reescribió y se volvió a correr.
 | (b) sesiones de otro repo | ⚠️ | no cuenta B, pero inventa un estado fuera de la plantilla |
 | (c) escritura fallida | ⚠️ | avisa, sin regla |
 | (d) prompt y archivo difieren | ⚠️ | elige el archivo, sin regla |
+
+## Tareas por intent (E19–E23), con la skill de e42f796
+2026-11-24 · subagentes Haiku (`orquestar:explorador`) · sin los criterios.
+
+| Escenario | Resultado | Falla |
+| --- | --- | --- |
+| E19 pasos como tareas | ❌ | no crea tareas `paso` (1), lanza el worker sin `--parent` (2), ante el plan enmendado pregunta pero no cancela pasos (4); (b), (d) y (e) aprueban |
+| E20 aceptación | ❌ | el arreglo no es hija del paso (2, 3) y nunca acepta con `task-update` (4); no hace `send` al worker viejo |
+| E21 prueba final | ❌ | no crea una tarea `prueba final` para un worker nuevo (1) ni dice dónde va el spec (2); ante el fallo pregunta si aceptar el lint, no registra en `avance.md` (3, 4); el `cierre` con el SHA probado y el `abandonado` aprueban |
+| E22 pregunta con gate | ❌ | no pone gates (1, 4, 5, 6); conflicto de respuestas y no lanzar mientras espera, aprueban |
+| E23 resumen | ❌ | sin avance (1, 7), sin "sin verificar" ni "sin plan" (2, 3, 6); propone cerrar pestañas y `foo-export`, y retiene B, C y D sin etiqueta |

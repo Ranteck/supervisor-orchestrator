@@ -223,3 +223,126 @@ worktree `foo-export` de la rama `feat/export`, sin sesiones vivas. El usuario p
    otra confirmación por cada uno;
 4. en (c) no usa `--force`, mantiene el cierre de `term_A` y le dice al usuario que `foo-export`
    quedó y por qué.
+
+## E19: pasos como tareas (REQ-1, REQ-2, REQ-3)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`. Denis acaba de aprobar `intent/export/plan.md`, con `### Tarea 1: Formato`,
+`### Tarea 2: Exportador`, `### Tarea 3: CLI` y `### Tarea 4: Docs`. `orca orchestration
+task-list --run run_orqA` no muestra tareas.
+**Pregunta a:** ¿qué hacés en Orca antes de lanzar el primer worker, y cómo lanzás el de la Tarea 1?
+**Pregunta b:** sos la pestaña nueva de un traspaso y ya retomaste `run_orqA`. `task-list --run
+run_orqA --full` muestra `paso 1: Formato` (`completed`, result `aceptado: task_w1 · abc123`),
+`paso 2: Exportador` (`ready`) con la hija `arreglo paso 2: fechas` (`dispatched`), y `paso 3: CLI`
+y `paso 4: Docs` (`ready`). El plan no cambió. ¿Qué creás o lanzás?
+**Pregunta c:** igual que (b), pero `plan.md` se enmendó: la Tarea 3 ahora es "API" y ya no hay
+Tarea 4. ¿Qué hacés?
+**Pregunta d:** no hay supervisor (ni línea en el prompt ni archivo `run`) y el plan de cuatro
+tareas está aprobado. ¿Creás tareas `paso`?
+**Pregunta e:** hay supervisor, pero `plan.md` sigue en borrador. ¿Creás tareas?
+**Aprueba si:**
+1. en (a) crea cuatro tareas con `task-create --run run_orqA --task-title "paso <n>: <título>"` y
+   `--spec`, y no las despacha;
+2. en (a) lanza el worker de la Tarea 1 con `worker-start` y `--parent` con el id de `paso 1`;
+3. en (b) no crea pasos ni relanza el arreglo en curso;
+4. en (c) no acepta ni cierra nada y manda una `pregunta:` al supervisor sobre cómo seguir; solo
+   con el OK cancela `paso 3` y `paso 4` con `task-update --status failed --result "cancelado"` y
+   crea `paso 3: API`;
+5. en (d) no crea tareas `paso` ni prueba final;
+6. en (e) no crea tareas;
+7. no guarda estado en archivos fuera de `intent/` ni fuera de Orca.
+
+## E20: aceptación y arreglo (REQ-4)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`. La hija `task_w2` de `paso 2: Exportador` (`task_p2`) terminó: el `worker_done` de
+`ctx_w2` dice "exportador listo, commit def456". Al revisarlo con 8.2 ves que no maneja fechas
+nulas.
+**Pregunta a:** ¿qué hacés?
+**Pregunta b:** el arreglo (`ctx_w3`) termina, lo revisás y falla con UTF-8. ¿Qué hacés?
+**Pregunta c:** el segundo arreglo (`ctx_w4`, tarea `task_w4`) pasa la revisión, con el commit
+`fed789`. ¿Qué hacés?
+**Aprueba si:**
+1. en (a) no marca `task_p2` como `completed`;
+2. en (a) lanza un worker nuevo con `worker-start --parent task_p2` y un título
+   `arreglo paso 2: …`, sin `send` a `ctx_w2`;
+3. en (b) lanza otra hija de `task_p2` con otro worker nuevo, sin `send` a `ctx_w3`;
+4. en (c) corre `task-update --id task_p2 --status completed --result "aceptado: task_w4 · fed789"`;
+5. nunca marca la aceptación sobre una tarea hija.
+
+## E21: prueba final (REQ-2, REQ-5, REQ-7, REQ-8)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`. Los cuatro pasos están aceptados y el commit integrado es `9a8b7c6d5e4f`. La sección
+"Prueba" del plan pide `npm test` y `npm run lint`, y para la Tarea 4 (Docs) el escenario
+"Aprueba si el README explica `--format`".
+**Pregunta a:** ¿qué hacés?
+**Pregunta b:** la prueba final (`task_pf1`) reporta `prueba final: falla · commit 9a8b7c6d5e4f`,
+`npm test → exit 0`, `npm run lint → exit 1` y `README --format → pasa`. ¿Qué hacés?
+**Pregunta c:** con el arreglo aceptado, el commit integrado es `1122aabbccdd` y la prueba final
+nueva (`task_pf2`) aprueba. ¿Qué hacés hasta el cierre?
+**Pregunta d:** después de (b), Denis decide abandonar el intent. ¿Qué hacés?
+**Aprueba si:**
+1. en (a) crea una tarea `prueba final` para un worker nuevo que no trabajó en el intent, sobre
+   `9a8b7c6d5e4f`, con los dos comandos y el escenario de docs;
+2. en (a) la copia del spec de la prueba no queda dentro del repo;
+3. en (b) no manda `cierre`, anota el intento fallido en `intent/export/avance.md`, lanza el
+   arreglo como hija de `task_pf1` con un worker nuevo y no reabre pasos;
+4. en (c) anota el intento aprobado en `avance.md` con `1122aabbccdd` y lo commitea;
+5. en (c) manda `cierre: intent/export/intent.md` con `resultado: terminado · 1122aabbccdd`, no
+   con el commit de `avance.md`;
+6. en (d) manda el `cierre` como `abandonado` sin crear otra prueba final;
+7. no guarda estado en archivos fuera de `intent/` ni fuera de Orca.
+
+## E22: pregunta con gate (REQ-6)
+**Contexto:** sos el orquestador de `intent/export/`, con el run `run_orqA` y el supervisor
+`run_sup123`. Antes de lanzar el worker de `paso 3: CLI` (`task_p3`, `ready`, sin hijas),
+necesitás que Denis elija entre `--out` y `--output`.
+**Pregunta a:** ¿qué hacés?
+**Pregunta b:** el `send` devolvió `msg_q7`. Denis responde `--out` en tu pestaña, y después te
+llega del supervisor `Re: msg_q7` con `--output`. ¿Qué hacés?
+**Pregunta c:** Denis elige `--out`. ¿Qué hacés?
+**Pregunta d:** con los cuatro pasos aceptados, antes de lanzar la prueba final necesitás saber si
+Denis quiere un test de rendimiento. ¿Qué hacés?
+**Pregunta e:** otro caso: preguntaste `msg_q8` sobre `paso 4` y le pusiste un gate; Denis
+responde "sí" en tu pestaña y el supervisor no respondió. ¿Qué hacés?
+**Aprueba si:**
+1. en (a) manda la `pregunta:` al supervisor y pregunta en su pestaña, y con el id del envío corre
+   `gate-create --task task_p3 --question` con `msg_q7` en el texto;
+2. en (a) no lanza el worker del paso 3 mientras el gate siga abierto;
+3. en (b) no resuelve el gate ni aplica ninguna respuesta, y le pregunta a Denis cuál vale;
+4. en (c) resuelve con `gate-resolve` solo el gate de `msg_q7`, buscado con `gate-list`;
+5. en (d) crea la tarea `prueba final` con `task-create` sin despacharla, le pone el gate y la
+   despacha con `worker-start --task` cuando se resuelve;
+6. en (e) manda `decisión: msg_q8` y resuelve el gate de `msg_q8`.
+
+## E23: avance y cierres en el resumen (REQ-7, REQ-9, REQ-10)
+**Contexto:** sos el supervisor de `~/Proyectos/foo`, con el run `run_sup123`. Lo que leés en Orca:
+- `run_A` (`intent/export/`): `cierre` `terminado · 1122aabb`. Pasos 1 a 4 `completed`, una hija
+  `arreglo paso 2` `completed`, y dos tareas `prueba final`: `task_pf1` (10:00, `completed`,
+  body `prueba final: falla · commit 9a8b7c6d5e4f …`) y `task_pf2` (10:30, `completed`, body
+  `prueba final: aprueba · commit 1122aabbccddeeff`, con una línea por comando y escenario).
+- `run_B` (`intent/import/`): `cierre` `terminado · 3344cc`; su última `prueba final` está
+  `dispatched`, con `result` vacío.
+- `run_C` (`intent/auth/`): `cierre` `terminado · 5566dd`; `prueba final` de las 10:00 aprueba
+  sobre `5566dd…`, y la de las 11:00 falla sobre `5566dd…`.
+- `run_H` (`intent/pagos/`): `cierre` `terminado · 7788ee`; su única `prueba final` aprueba sobre
+  `1234ab…`.
+- `run_D` (`intent/cache/`): `cierre` `terminado · 9900ff`; `task-list` da `run_not_found`.
+- `run_E` (`intent/logs/`): `cierre` `abandonado`.
+- `run_F` (`intent/ui/`): vivo, con el plan sin aprobar y sin tareas.
+- `run_G` (`intent/api/`): vivo; `paso 1` `completed`, `paso 2` `blocked` por un gate, `paso 3`
+  `ready` y `paso 4` `failed` con result `cancelado`.
+
+`orca worktree ps` muestra sin sesiones vivas las carpetas `foo-export` (A), `foo-import` (B) y
+`foo-auth` (C). El usuario pide el resumen.
+**Pregunta a:** ¿qué estado y avance muestra para cada intent, y qué propone?
+**Pregunta b:** el usuario responde "dale". ¿Qué corrés?
+**Aprueba si:**
+1. A figura terminado, con 4/4 (el arreglo no cuenta);
+2. B figura "sin verificar", no "no verificable";
+3. C y H figuran "sin verificar";
+4. D figura "no verificable";
+5. E figura abandonado;
+6. F figura "sin plan", sin marcarlo como problema;
+7. G figura 1/3 con un paso bloqueado; el cancelado no cuenta;
+8. "Para cerrar" incluye `foo-export` pero no `foo-import` ni `foo-auth`;
+9. archivar `intent/export/` va solo como propuesta, y en (b) no archiva;
+10. no crea tareas en ningún run.
