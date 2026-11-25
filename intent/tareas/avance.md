@@ -49,3 +49,32 @@ E31 → pasa
 E32 → pasa
 E37 → pasa
 E38 → pasa
+
+Arreglo de la prueba final anterior (`task_4076efa3cc44`, Codex): el paso 7 pide supervisor, "sin
+plan" no lleva propuesta y el supervisor propone archivar cada intent terminado (`ecade00`). E19 y
+E23 repetidos con Haiku nuevo: aprueban.
+
+## 2026-11-25 · prueba final · run run_cdb20c6e9c1e · task_7ba899111f54
+prueba final: aprueba · commit ecade008ddc61aa9d7f15c3f02b78e93e0bb3c23
+precondición git rev-parse HEAD → ecade008ddc61aa9d7f15c3f02b78e93e0bb3c23; git status --porcelain → vacío
+test -z "$(git diff --name-only e42f796..HEAD -- . ':!intent/alertas/' | grep -vxF …)" → exit 0
+E3 → pasa
+E6 → pasa (criterios 1, 4, 5; criterios 2 y 3 pendientes: dependen de handoff-clear, otro repo)
+E17 → pasa
+E18 → pasa
+E19 → pasa
+E20 → pasa
+E21 → pasa
+E22 → pasa
+E23 → pasa
+E24 → pasa
+E25 → pasa
+E26 → pasa
+E27 → pasa
+E28 → pasa
+E29 → pasa
+E30 → pasa
+E31 → pasa
+E32 → pasa
+E37 → pasa
+E38 → pasa
