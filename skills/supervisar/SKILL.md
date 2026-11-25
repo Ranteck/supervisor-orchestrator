@@ -101,8 +101,8 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
 6. **Al terminar o abandonar el intent**, antes del `cierre`: pará con
    `orca orchestration worker-stop --dispatch <id>` cada worker que
    `orca orchestration worker-list --run <tu run>` muestre sin `released`, y proponé borrar los
-   worktrees que creaste, los de las pruebas finales incluidos, y ya están mergeados en tu rama;
-   borralos solo con OK, con
+   worktrees que creaste, los de las pruebas finales incluidos, y ya están mergeados en tu rama,
+   con una `pregunta:` antes del `cierre`; borralos solo con OK, con
    `orca worktree rm --worktree <selector>` sin `--force`. Si el `cierre` sale sin
    `run_not_found`, como última acción cerrá tu pestaña con
    `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`, y si no podés, decíselo al
