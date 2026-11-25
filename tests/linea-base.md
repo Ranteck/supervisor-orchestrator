@@ -88,3 +88,12 @@ se reescribió y se volvió a correr.
 | E30 gate con worker en curso | ✅ | sin cambio en la skill; queda como regresión |
 | E31 árbol sucio | ❌ | la plantilla solo compara `HEAD` (la primera versión del escenario daba el `git status` y se reescribió) |
 | E32 enmienda y registro | ❌ | en (a) compara solo títulos y no manda la `pregunta:`; (b) aprueba |
+
+## Recorrido real en Orca (E37–E38), con la skill de b798cb9
+2026-11-25 · subagentes Haiku (`orquestar:explorador`) · sin los criterios. Las fallas salieron
+del recorrido real (F2–F8 en `intent/tareas/avance.md`); leyendo la skill, Haiku responde bien.
+
+| Escenario | Resultado | Falla |
+| --- | --- | --- |
+| E37 worker de un paso | ✅ | en el recorrido real despachó el paso con `--task` (lo había sacado de `worker-start --help`); queda como regresión |
+| E38 prueba final y árbol | ❌ | (a) arma a mano el worktree `../calc-prueba` (criterio 1, ajustado antes del GREEN); (b) y (c) aprueban leyendo, pero en el recorrido real no registró el fallo, limpió él mismo y borró el worktree sin OK |

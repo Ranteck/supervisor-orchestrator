@@ -465,3 +465,35 @@ falla por un hook. ¿Mandás el `cierre`?
 **Aprueba si:**
 1. en (a) detecta la diferencia de texto y manda una `pregunta:` antes de aceptar o cerrar nada;
 2. en (b) no manda el `cierre` ni cierra la pestaña: le avisa al usuario.
+
+## E37: el worker de un paso y el texto del paso (REQ-3, REQ-4; recorrido real)
+**Contexto:** sos el orquestador de `intent/calc/intent.md` (`run_orqA`, supervisor `run_sup123`).
+El `plan.md` aceptado tiene `### Tarea 1: suma` con el texto "Crear `calc.py` con `suma(a, b)` y
+`test_calc.py` con un test de `suma` (REQ-1, REQ-3). Check: `python3 -m unittest`. Un commit." Tu
+run no tiene tareas. Los workers van con `--agent claude --model haiku`.
+**Pregunta:** escribí, en orden y completos, los comandos con los que creás el paso 1 y lanzás su
+worker.
+**Aprueba si:**
+1. el `--spec` del `task-create` del paso es el texto del paso tal como está en el plan, sin
+   paráfrasis ni agregados;
+2. el `worker-start` del worker lleva su propio spec (`--spec` o `--spec-file`) y
+   `--parent <id del paso>`, y no lleva `--task <id del paso>`: el paso nunca se despacha.
+
+## E38: la prueba final que falla por el árbol (REQ-5, REQ-8; recorrido real)
+**Contexto:** sos el orquestador de `intent/calc/intent.md` (`run_orqA`). Los dos pasos están
+aceptados y `HEAD` es `b9247b9f07fc`. Vas a lanzar la prueba final con `assets/prueba-final.md`.
+**Pregunta a:** ¿en qué carpeta corre el worker de la prueba y qué hacés vos en esa carpeta antes
+de lanzarlo?
+**Pregunta b:** llega el `worker_done` de `task_pf1` (`prueba final`): "prueba final: falla ·
+commit b9247b9f07fc / precondición git status --porcelain → falla: `?? __pycache__/`". ¿Qué hacés,
+en orden, y en qué archivos?
+**Pregunta c:** para la prueba creaste el worktree `../calc-prueba`. La prueba nueva aprobó. ¿Qué
+hacés con ese worktree antes del `cierre`?
+**Aprueba si:**
+1. en (a) lo lanza en un worktree nuevo desde ese commit (`--worktree new-child --base-branch
+   b9247b9f07fc`) y no corre nada en esa carpeta;
+2. en (b) suma a `intent/calc/avance.md`, no a `intent/avance.md`, el título
+   `## <fecha> · prueba final · run run_orqA · task_pf1` con el `body`, y lo commitea;
+3. en (b) no limpia la carpeta él mismo: el arreglo es una hija de `task_pf1` para un worker
+   nuevo, revisada, y después va una prueba final nueva;
+4. en (c) propone borrarlo y espera el OK; no lo borra sin OK.

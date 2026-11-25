@@ -101,7 +101,8 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
 6. **Al terminar o abandonar el intent**, antes del `cierre`: pará con
    `orca orchestration worker-stop --dispatch <id>` cada worker que
    `orca orchestration worker-list --run <tu run>` muestre sin `released`, y proponé borrar los
-   worktrees que creaste y ya están mergeados en tu rama; borralos solo con OK, con
+   worktrees que creaste, los de las pruebas finales incluidos, y ya están mergeados en tu rama;
+   borralos solo con OK, con
    `orca worktree rm --worktree <selector>` sin `--force`. Si el `cierre` sale sin
    `run_not_found`, como última acción cerrá tu pestaña con
    `orca terminal close --terminal "$ORCA_TERMINAL_HANDLE" --tab`, y si no podés, decíselo al
@@ -113,9 +114,10 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
    cada ítem de "Orden de trabajo") es un paso; si el plan no tiene ninguno, mandá una `pregunta:`
    antes de lanzar workers. Creá los que falten en
    `orca orchestration task-list --run <tu run> --full --json`, también al retomar, con
-   `orca orchestration task-create --run <tu run> --task-title "paso <n>: <título>" --spec "<texto del paso>"`.
-   Antes, no crees ninguno. Un paso nunca se despacha: su worker lleva `--parent <id del paso>` en
-   el `worker-start`. Si los pasos sin cancelar del run no coinciden con el plan (título o
+   `orca orchestration task-create --run <tu run> --task-title "paso <n>: <título>" --spec "<texto del paso>"`,
+   con el texto copiado del plan sin cambios. Antes, no crees ninguno. Un paso nunca se despacha:
+   su worker va con `worker-start --spec "<spec del worker>" --parent <id del paso>`, nunca con
+   `--task <id del paso>`. Si los pasos sin cancelar del run no coinciden con el plan (título o
    `--spec`, pasos nuevos o quitados), no aceptes ni cierres nada y mandá una `pregunta:`; con el OK, cancelá los que
    sobran o cambiaron con `task-update --id <paso> --status failed --result "cancelado"` y creá
    los nuevos.
@@ -126,10 +128,12 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
      worker nuevo, nunca un `send` al que lo construyó; si el arreglo falla, otra hija más.
 8. **Prueba final:** con todos los pasos aceptados, la lanzás vos, en tu run: completá
    `assets/prueba-final.md` en tu scratchpad, nunca en el repo, y corré `worker-start` con
-   `--task-title "prueba final"` y esa copia como spec, para un worker nuevo que no trabajó en el
-   intent. Con cada `worker_done` de una prueba final, apruebe o falle, sumá a `avance.md` en la
-   carpeta del intent (`intent/avance.md` en el raíz) un título
-   `## <fecha> · prueba final · run <run> · <tarea>` con su `body`, y commitealo. Si falla, los arreglos son hijas de esa prueba final,
+   `--task-title "prueba final"`, esa copia como spec y `--worktree new-child --base-branch <sha>`,
+   para un worker nuevo que no trabajó en el intent, en una carpeta limpia donde vos no corrés
+   nada. Con cada `worker_done` de una prueba final, apruebe o falle, aunque la causa sea tuya o
+   del entorno, sumá a `intent/<feature>/avance.md` (`intent/avance.md` si es el intent raíz) un
+   título `## <fecha> · prueba final · run <run> · <id de la tarea>` con su `body`, y commitealo.
+   Si falla, los arreglos son hijas de esa prueba final, aunque solo haya que limpiar la carpeta,
    con workers nuevos y revisados como un paso, y después va una prueba final nueva; los pasos no
    se reabren, porque `task-update` pisa su `result`.
 9. **Preguntas que frenan:** si una `pregunta:` frena algo, poné el gate sobre una tarea sin

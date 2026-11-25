@@ -128,6 +128,8 @@ reporte del worker, los arreglos no inflan el total y los gates nunca caen sobre
 ### Tarea 5: Prueba final y cierre
 2026-11-24: se suman los escenarios del concilio (E24–E32) y un recorrido real en Orca, porque
 hasta acá todo fueron respuestas de Haiku leyendo la skill. Aprobado por Denis.
+2026-11-25: se suman E37 y E38, los escenarios que dejó el recorrido real, a la corrida del
+worker; van desde E37 porque E33–E36 son de `intent/alertas`. Aprobado por Denis.
 - [ ] Recorrido real en un repo de juguete descartable (fuera de este repo): un supervisor y un
   orquestador en Claude Code con Haiku, siguiendo la skill, sobre un intent chico con un plan de
   dos pasos. Pasa si, en Orca: los dos pasos existen como tareas sin despachar, los workers son
@@ -135,7 +137,7 @@ hasta acá todo fueron respuestas de Haiku leyendo la skill. Aprobado por Denis.
   un worker nuevo sobre un árbol limpio, `avance.md` queda commiteado, el `cierre` lleva el commit
   probado y el resumen del supervisor muestra 2/2 y terminado. Anotar lo que falle como escenario
   nuevo antes de arreglarlo.
-- [ ] Un worker nuevo corre, sobre el SHA integrado, E19–E32, E3, E6, E17 y E18, más
+- [ ] Un worker nuevo corre, sobre el SHA integrado, E19–E32, E37, E38, E3, E6, E17 y E18, más
   `git diff --name-only e42f796..HEAD`, que solo puede listar `skills/supervisar/SKILL.md`,
   `skills/supervisar/assets/prueba-final.md`, `skills/supervisar/assets/resumen.md`,
   `tests/escenarios.md`, `tests/linea-base.md`, `tests/verde.md`, `README.md` e
@@ -151,6 +153,8 @@ hasta acá todo fueron respuestas de Haiku leyendo la skill. Aprobado por Denis.
 | E21 prueba final que falla con 4/4, arreglo, nueva prueba que aprueba; registro de los dos intentos y `cierre` con su SHA; (b) `abandonado` sin prueba final | REQ-2, REQ-5, REQ-7, REQ-8 |
 | E22 pregunta con gate en un paso y en la prueba final; respuestas distintas; `decisión:` | REQ-6 |
 | E23 resumen: avance 4/4 con arreglo, un paso `blocked`, un run "sin plan"; terminado, prueba en curso, de otro SHA, sin run, abandonado; carpeta sin verificar fuera de "Para cerrar"; archivar como propuesta | REQ-7, REQ-9, REQ-10 |
+| E37 worker de un paso con `--parent`, nunca `--task`; spec del paso sin cambios (recorrido real) | REQ-3, REQ-4 |
+| E38 prueba final en worktree nuevo, registro del fallo en el `avance.md` del intent, arreglo como hija y borrado con OK (recorrido real) | REQ-5, REQ-8 |
 | `git diff --name-only` con solo los archivos del plan | REQ-2 |
 
 ## Riesgos
