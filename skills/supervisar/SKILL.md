@@ -71,8 +71,8 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
 Hay supervisor si el prompt trae "Supervisor: run `<id>`" o si existe el archivo `run` de tu
 repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá como siempre y no crees uno.
 
-1. **Tu run:** si `orca orchestration run-current` da `none`,
-   `orca orchestration run-create --objective "<intent>"`. Es tu único run: los workers y concilios
+1. **Tu run:** si `orca orchestration run-current` da `none` o un run cuyo `objective` es otro
+   intent, `orca orchestration run-create --objective "<intent>"`. Es tu único run: los workers y concilios
    van en él, porque el traspaso se lleva un solo run.
 2. **Mensajes:** solo estos cuatro, con
    `orca orchestration send --to run:<supervisor> --subject "…" --body "…"`, sin `--run`, con
