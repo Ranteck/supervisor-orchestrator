@@ -43,14 +43,14 @@ Corrés en una carpeta de tu proyecto y solo ves ese proyecto.
    **Avance y cierres:** por cada alta, `orca orchestration task-list --run <su run> --full --json`.
    Solo cuentan las tareas sin padre (`parent_id` nulo) y sin cancelar (`failed` con `cancelado`).
    El avance son los pasos (`paso <n>:`) `completed` sobre el total, más los `blocked` y, si la última prueba final falló, "prueba final: falla";
-   sin pasos es "sin plan", que no es un problema, y con `run_not_found`, "no verificable". Un
+   sin pasos es "sin plan" y no lleva propuesta. Con `run_not_found`, "no verificable". Un
    `cierre` `terminado` figura terminado solo si la de título exacto `prueba final` con el
    `created_at` más reciente está `completed`, la primera línea de su `result.body` es
    `prueba final: aprueba · commit <sha>`, sigue una línea por chequeo y ese sha empieza con el
    commit del cierre. Si no hay prueba final, la última está en curso o falló, o es de otro commit,
    figura "sin verificar"; si `task-list` da `run_not_found` o el `result` de una prueba
    `completed` no se puede leer, "no verificable". Un `abandonado` figura abandonado. Nunca crees
-   tareas, y archivar un intent terminado va solo en "Propuestas".
+   tareas. En "Propuestas", proponé archivar cada intent que figure terminado. Nunca lo archives.
 
    En "Para cerrar" van las pestañas de orquestadores con `cierre:` que siguen en
    `orca terminal list` y la carpeta de su alta, salvo la principal del repo, si no tiene sesiones
@@ -110,8 +110,8 @@ repo; si difieren, vale el archivo, y tu memoria no cuenta. Si no hay, trabajá 
    El `cierre` `terminado` va solo si la última prueba final aprobó (paso 8) y su registro ya
    está commiteado, y lleva el commit probado de su `body`, no el del registro; `abandonado` no
    la pide.
-7. **Pasos del plan:** con `plan.md` aceptado, cada `### Tarea <n>` o `### Task <n>` (si no hay,
-   cada ítem de "Orden de trabajo") es un paso; si el plan no tiene ninguno, mandá una `pregunta:`
+7. **Pasos del plan:** con supervisor y `plan.md` aceptado, cada `### Tarea <n>` o `### Task <n>`
+   (si no hay, cada ítem de "Orden de trabajo") es un paso; si el plan no tiene ninguno, mandá una `pregunta:`
    antes de lanzar workers. Creá los que falten en
    `orca orchestration task-list --run <tu run> --full --json`, también al retomar, con
    `orca orchestration task-create --run <tu run> --task-title "paso <n>: <título>" --spec "<texto del paso>"`,
