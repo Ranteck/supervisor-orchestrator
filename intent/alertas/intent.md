@@ -14,7 +14,8 @@ orquestador, tengo oportunidad de ver sus avisos:
 - al terminar, el orquestador me pregunta y espera mi OK antes de cerrar su pestaña: así reviso, y
   ahí puede ser que aparezca;
 - en "Para cerrar", el supervisor vuelve a mirar y me muestra los avisos nuevos;
-- en un traspaso, sus avisos pasan a la pestaña nueva, que me los muestra al arrancar.
+- en un traspaso, me pide mirarlos antes de aprobarlo, y los que charlo pasan a la pestaña nueva,
+  que me los muestra al arrancar.
 
 ## Usuarios y sistemas afectados
 Yo; supervisor y orquestadores de `supervisar`; los avisos "Heads up" del mod "You should know" de
@@ -26,7 +27,7 @@ Probado (2026-11-24/25):
   `orca search`; `orca terminal read` lo lee mientras se vea.
 - Si lo charlo, entra como turno de usuario; recién ahí lo ve el orquestador.
 - De la pantalla se toman solo las líneas del aviso: el resto puede tener secretos.
-- Cambia el cierre aceptado (REQ-8, REQ-12 y REQ-13 del spec raíz), sin mensajes nuevos.
+- Cambia el cierre aceptado (REQ-3, REQ-8, REQ-12 y REQ-13 del spec raíz), sin mensajes nuevos.
 
 ## Fuera de alcance
 - Que el supervisor responda o descarte un aviso, o escriba en otra pestaña.
@@ -42,3 +43,5 @@ Probado (2026-11-24/25):
 - ¿El aviso se borra solo con un turno nuevo, o también con el tiempo? Prueba en curso.
 
 ## Cambios
+2026-11-25: en un traspaso pasan solo los avisos que charlo, porque el turno que lo aprueba borra
+el aviso y la pestaña vieja ya no lo puede leer. Aprobado por Denis.

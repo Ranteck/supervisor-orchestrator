@@ -16,11 +16,11 @@ del mod "You should know" bajo el prompt.
   si la cierra, sin `pregunta:`, y la cierra solo con un OK inequívoco; ante otra respuesta la deja
   abierta y vuelve a preguntar después. Origen: RE 1.
 - REQ-6 MUST: En "Para cerrar", el supervisor relee cada pestaña aprobada antes de cerrarla; si
-  muestra un aviso que no figuraba en el resumen o no se pudo leer, la deja abierta, lo informa y pregunta, y
+  muestra un aviso que no figuraba en el resumen o no se pudo leer, la deja abierta, lo informa, pregunta y
   sigue con el resto. Origen: RE 2.
-- REQ-7 MUST: En un traspaso, los avisos visibles de la pestaña vieja pasan a la nueva, que los
-  muestra al arrancar con su origen, sin imitar el formato del aviso, o dice que no pudo leerla.
-  Origen: RE 3.
+- REQ-7 MUST: Al proponer un traspaso, el orquestador pide mirar los avisos antes de aprobarlo; los
+  que el usuario charló pasan a la pestaña nueva, que los muestra al arrancar con su origen, sin imitar el
+  formato del aviso. Origen: RE 3 (cambiado 2026-11-25, aprobado por Denis).
 - REQ-8 MUST: Sin mensajes nuevos ni lectura del archivo del mod; nadie responde un aviso por el
   usuario ni el supervisor escribe en otra pestaña. Origen: Restricciones; Fuera de alcance.
 
@@ -45,9 +45,9 @@ del mod "You should know" bajo el prompt.
   con otro OK cierra `orq-b`, con un no la deja.
 - GIVEN un aviso ya mostrado en el resumen, WHEN ejecuta, THEN la cierra.
 
-### Traspaso (REQ-3, REQ-7)
-- GIVEN la pestaña vieja con un aviso, WHEN hace traspaso, THEN la nueva lo muestra al arrancar
-  con su origen y nada más de la vieja, que se cierra como hoy; si no se pudo leer, lo dice.
+### Traspaso (REQ-7)
+- GIVEN un aviso charlado y otro no en la pestaña vieja, WHEN el orquestador propone el traspaso y
+  el usuario lo aprueba, THEN la propuesta pidió mirarlos y la nueva muestra solo el charlado.
 
 ### Sin supervisor (REQ-1)
 - GIVEN ningún supervisor, WHEN un orquestador cierra o traspasa, THEN nada cambia.
@@ -55,7 +55,7 @@ del mod "You should know" bajo el prompt.
 ## Concerns
 - Enmienda REQ-3 raíz (REQ-5 no manda `pregunta:`: una respuesta por Orca abriría un turno que
   borra el aviso, y "Para cerrar" cubre al que no responde), REQ-8, REQ-12 y REQ-13.
-- Límite aceptado: un turno nuevo borra el aviso (dos casos, 2026-11-25); se pierde el que se
+- Límite aceptado: un turno nuevo borra el aviso (cuatro casos, 2026-11-25); se pierde el que se
   borra o aparece después de leer. Sin probar si se borra con el tiempo.
 - Riesgos aceptados: cambio de formato del mod (dejaría de verse sin error), texto del aviso
   sensible, pestaña nueva de traspaso sin leer hasta su próximo mensaje.
