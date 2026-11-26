@@ -78,3 +78,9 @@ E31 → pasa
 E32 → pasa
 E37 → pasa
 E38 → pasa
+
+## 2026-11-26 · E6 tras handoff-clear@cfe48c5
+E6 repetido (un subagente Haiku, sin criterios, sobre `handoff-clear@cfe48c5`): pasa los 5
+criterios; el 2 y el 3, pendientes desde la prueba final, quedan resueltos. Observado: en (b)
+corre `run-current` antes de `run-use`; con `none`, el paso 1 de "Si reportás a uno" crearía un
+run duplicado. Sin cambio por ahora.
